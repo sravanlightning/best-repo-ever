@@ -1,0 +1,79 @@
+<!--
+  @description       :
+  @author            : luke.vang@optum.com
+  @group             :
+  @last modified on  : 12-04-2025
+  @last modified by  : luke.vang@optum.com
+-->
+<template>
+<div class="slds-is-relative" if:true={displayForm}>
+<lightning-card title="Interview Questions">
+<c-error-notifier show-text=true></c-error-notifier>
+<lightning-layout multiple-rows if:false={hasError}>
+<lightning-layout-item size="12" padding="around-small">
+<lightning-combobox options={typeOptions} label="Type" data-id="combo-type" onchange={handleChange}  dropdown-alignment="auto" disabled={isReadOnly}></lightning-combobox>
+</lightning-layout-item>
+<lightning-layout-item size="12" padding="around-small">
+<lightning-combobox options={relationToMemberOptions} label="Relation to Member" data-id="combo-rel-to-member" onchange={handleChange}  dropdown-alignment="auto"  disabled={isReadOnly}></lightning-combobox>
+</lightning-layout-item>
+<lightning-layout-item size="12" padding="around-small">
+<lightning-input type="toggle" label="" name="privacy-toggle" message-toggle-active="Public"
+message-toggle-inactive="Private" checked={checked} if:true={isReadOnly} onchange={handleToggle}
+disabled={toggleDisabled}></lightning-input>
+</lightning-layout-item>
+<template if:true={displayInterviewQuestions}>
+<lightning-layout-item size="12" padding="around-small">
+<lightning-combobox name="Group 1" label="Group 1" options={group1options} disabled={isGroup1Disabled}
+dropdown-alignment="auto" placeholder="Select a Group 1 option" value={selectedGroup1Option} required
+onchange={handleGroup1Change}></lightning-combobox>
+</lightning-layout-item>
+<lightning-layout-item size="12" padding="around-small">
+<lightning-combobox name="Group 2" label="Group 2" options={group2options} disabled={isGroup2Disabled}
+dropdown-alignment="auto" placeholder="Select a Group 2 option" data-id="group2"
+value={selectedGroup2Option} required onchange={handleGroup2Change}></lightning-combobox>
+</lightning-layout-item>
+<lightning-layout-item size="12" padding="around-small">
+<lightning-combobox name="Group 3" label="Group 3" options={group3options} disabled={isGroup3Disabled}
+placeholder="Select a Group 3 option" required={isGroup3Required} data-id="group3"
+dropdown-alignment="auto" value={selectedGroup3Option}
+onchange={handleGroup3Change}></lightning-combobox>
+</lightning-layout-item>
+<template if:true={interviewQuestions}>
+<lightning-layout-item size="12" padding="around-small">
+<div class="slds-form-element__label slds-p-top_small">
+                  We need to ask you some questions to complete your application. Please note that after our interview, if additional information is still needed, we may contact you or your provider directly for further information.
+</div>
+</lightning-layout-item>
+</template>
+<template for:each={interviewQuestions} for:item="freeFormQuestion" for:index="index">
+<lightning-layout-item size="12" padding="around-small" key={freeFormQuestion.questionId}>
+<c-interview-management-free-form-item question={freeFormQuestion.question}
+questions-length={freeFormQuestionLength} answer={freeFormQuestion.answer}
+item-id={freeFormQuestion.questionId} onupdate={handleFreeFormItemUpdate}
+onadd={handleAddFreeFormQuestion} item-index={index} is-read-only={isReadOnly}
+onremove={handleRemoveFreeFormQuestion}></c-interview-management-free-form-item>
+</lightning-layout-item>
+</template>
+<template if:true={interviewQuestions}>
+<lightning-layout-item size="12" padding="around-small">
+<div class="slds-form-element__label slds-p-top_small">
+                  I want to thank you for answering all of the questions. Because this information is being used to determine your eligibility for coverage and rate, I need to confirm the following: Have you answered all questions completely and truthfully to the best of your knowledge and belief?
+</div>
+</lightning-layout-item>
+</template>
+</template>
+</lightning-layout>
+</lightning-card>
+<template if:true={displayForm}>
+<div class="slds-docked-form-footer" style="position:sticky;" if:false={hasError}>
+<button type="button" class="slds-button slds-button_brand" onclick={handleCancel}
+disabled={loading}>Back</button>
+<button type="button" class="slds-button slds-button_brand" onclick={handleSave}
+disabled={disableSave}>Save</button>
+<button type="button" class="slds-button slds-button_brand" onclick={handleSubmit}
+disabled={disableSubmit}>Submit</button>
+</div>
+</template>
+<lightning-spinner if:true={loading} alternative-text="Loading"></lightning-spinner>
+</div>
+</template>
